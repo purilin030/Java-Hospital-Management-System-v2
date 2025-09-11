@@ -62,6 +62,7 @@ public class FacilityFormDialog {
         return dialog.showAndWait();
     }
 
+    //Functions (validate): 
     private static boolean validate(TextField name, Label errorLabel, Node addBtn) {
         name.setStyle(null);
         String err = null;
@@ -73,4 +74,5 @@ public class FacilityFormDialog {
         return err == null;
     }
 }
+
 
