@@ -32,8 +32,9 @@ public class DoctorsTab {
     }
 
     public Tab build() {
+    	//table and columns
         TableView<Doctor> table = new TableView<>(items);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);//Use CONSTRAINED to automatically distribute the remaining width evenly among columns
 
         TableColumn<Doctor, String> cId   = new TableColumn<>("ID");
         TableColumn<Doctor, String> cName = new TableColumn<>("Name");
@@ -50,32 +51,44 @@ public class DoctorsTab {
         cRoom.setCellValueFactory(cell -> new ReadOnlyStringWrapper(String.valueOf(cell.getValue().getRoom())));
 
         table.getColumns().addAll(cId, cName, cSpec, cWork, cQual, cRoom);
-
+        
+        //search box
         TextField searchField = new TextField();
         searchField.setPromptText("Search by Doctor ID...");
+        
+        //button
         Button searchBtn  = new Button("Search");
         Button addBtn     = new Button("Add");
         Button deleteBtn  = new Button("Delete");
         Button refreshBtn = new Button("Refresh");
 
+        //header of tab
         HBox actions = new HBox(8, searchField, searchBtn, addBtn, deleteBtn, refreshBtn);
         actions.setAlignment(Pos.CENTER_LEFT);
         actions.setPadding(new Insets(8, 0, 8, 0));
 
+        //searching
         searchBtn.setOnAction(e -> {
             String id = searchField.getText() == null ? "" : searchField.getText().trim();
+            //if search box is empty, if will pop up a message
             if (id.isEmpty()) { info.accept("Enter Doctor ID."); return; }
+            //if no found the id
             Doctor match = null;
             for (Doctor d : items) if (d != null && d.getId().equalsIgnoreCase(id)) { match = d; break; }
             if (match == null) info.accept("Not found.");
-            else { table.getSelectionModel().select(match); table.scrollTo(match); }
+            else { table.getSelectionModel().select(match); table.scrollTo(match); }//highlight the row you want to find
         });
+        
+        searchField.setOnAction(e -> searchBtn.fire());//support press enter to search
 
+        //adding
         addBtn.setOnAction(e -> {
             Optional<Doctor> maybe = DoctorFormDialog.show();
             if (maybe.isPresent()) {
                 Doctor d = maybe.get();
+              //if the number of doctor is out of the array length which is declared in initialization
                 if (init.docCount >= init.doctors.length) { error.accept("Doctor list full."); return; }
+                //validation for adding duplicate id
                 for (int i = 0; i < init.docCount; i++) {
                     if (init.doctors[i].getId().equalsIgnoreCase(d.getId())) { error.accept("Duplicate ID."); return; }
                 }
@@ -85,13 +98,16 @@ public class DoctorsTab {
             }
         });
 
-        deleteBtn.setOnAction(e -> {
+        //deleting
+        deleteBtn.setOnAction(e -> {  
             Doctor sel = table.getSelectionModel().getSelectedItem();
-            if (sel == null) { info.accept("Select a row."); return; }
+            
+           //confirmation for delete
             Alert c = new Alert(Alert.AlertType.CONFIRMATION,
                     "Delete doctor [" + sel.getId() + " - " + sel.getName() + "] ?",
                     ButtonType.OK, ButtonType.CANCEL);
             c.setHeaderText("Confirm Deletion");
+            
             c.showAndWait().ifPresent(btn -> {
                 if (btn == ButtonType.OK) {
                     boolean ok = Deleting.deleteDoctorById(init.doctors, new int[]{init.docCount}, sel.getId());
@@ -99,8 +115,15 @@ public class DoctorsTab {
                 }
             });
         });
+        
+        //if user no select any row, delete button cannot use
+        deleteBtn.disableProperty().bind(
+        	    table.getSelectionModel().selectedItemProperty().isNull()
+        );
 
-        refreshBtn.setOnAction(e -> refreshFromArray.run());
+        
+        //refreshing
+        refreshBtn.setOnAction(e -> refreshFromArray.run());//ensure UI consistency with the actual source
 
         VBox content = new VBox(actions, table);
         content.setSpacing(6);
