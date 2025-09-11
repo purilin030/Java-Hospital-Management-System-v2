@@ -85,7 +85,7 @@ public class MedicinesTab {
                 Medicine m = maybe.get();
               //if the number of medicine is out of the array length which is declared in initialization
                 if (init.medCount >= init.medicines.length) { error.accept("Medicine list full."); return; }
-              //validation for adding duplicate id
+              //validation for adding duplicate name
                 for (int i = 0; i < init.medCount; i++) {
                     if (init.medicines[i].getName().equalsIgnoreCase(m.getName())) { error.accept("Duplicate name."); return; }
                 }
@@ -127,3 +127,4 @@ public class MedicinesTab {
         return tab;
     }
 }
+
