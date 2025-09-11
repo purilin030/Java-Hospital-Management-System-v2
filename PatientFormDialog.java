@@ -9,13 +9,18 @@ import java.util.Optional;
 public class PatientFormDialog {
 
     public static Optional<Patient> show() {
+
+        // <Patient> means return the patient type 
         Dialog<Patient> dialog = new Dialog<Patient>();
         dialog.setTitle("Add New Patient");
         dialog.setHeaderText("Fill in the details");
 
+        //Add the "Add " button and confirm the function "ButtonBar.ButtonData.OK_DONE" 
         ButtonType okType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        //addAll to "Add" button that had created before and JavaFx's cancel button
         dialog.getDialogPane().getButtonTypes().addAll(okType, ButtonType.CANCEL);
 
+        //Add textfield to prompt user to enter data
         final TextField id = new TextField();
         final TextField name = new TextField();
         final TextField disease = new TextField();
@@ -23,6 +28,7 @@ public class PatientFormDialog {
         final ComboBox<String> admin = new ComboBox<String>();
         final TextField age = new TextField();
 
+        //Add hint text
         id.setPromptText("e.g., P1001");
         name.setPromptText("Name");
         disease.setPromptText("Disease");
@@ -32,11 +38,15 @@ public class PatientFormDialog {
         admin.setPromptText("Select");
         age.setPromptText("e.g., 30");
 
+        // Create a new label, display the error text when user prompt wrong data
         final Label errorLabel = new Label();
         errorLabel.setStyle("-fx-text-fill: #d00000; -fx-font-size: 12px;");
 
+        // Create a new GridPane and configure the horizontal and vertical
         GridPane gp = new GridPane();
         gp.setHgap(10); gp.setVgap(10); gp.setPadding(new Insets(10));
+
+        //Using addRow to combine the Label and TextField
         gp.addRow(0, new Label("ID:"), id);
         gp.addRow(1, new Label("Name:"), name);
         gp.addRow(2, new Label("Disease:"), disease);
@@ -45,20 +55,22 @@ public class PatientFormDialog {
         gp.addRow(5, new Label("Age:"), age);
         gp.add(errorLabel, 0, 6, 2, 1);
 
+        //Make okType to Node addBtn element and disable addButton disable first
         Node addBtn = dialog.getDialogPane().lookupButton(okType);
         addBtn.setDisable(true);
 
-        // 实时校验
+        // Validation (using validate function ) 
         id.textProperty().addListener((o, ov, nv) -> validate(id, name, age, sex, admin, errorLabel, addBtn));
         name.textProperty().addListener((o, ov, nv) -> validate(id, name, age, sex, admin, errorLabel, addBtn));
         age.textProperty().addListener((o, ov, nv) -> validate(id, name, age, sex, admin, errorLabel, addBtn));
         sex.valueProperty().addListener((o, ov, nv) -> validate(id, name, age, sex, admin, errorLabel, addBtn));
         admin.valueProperty().addListener((o, ov, nv) -> validate(id, name, age, sex, admin, errorLabel, addBtn));
-
+    
         dialog.getDialogPane().setContent(gp);
 
         dialog.setResultConverter(btn -> {
             if (btn == okType) {
+                //Last validate check 
                 if (!validate(id, name, age, sex, admin, errorLabel, addBtn)) return null;
                 int ageVal;
                 try {
@@ -71,6 +83,7 @@ public class PatientFormDialog {
                     new Alert(Alert.AlertType.ERROR, "Age must be a number", ButtonType.OK).showAndWait();
                     return null;
                 }
+                //return data 
                 return new Patient(
                         id.getText().trim(),
                         name.getText().trim(),
@@ -82,10 +95,11 @@ public class PatientFormDialog {
             }
             return null;
         });
-
+         //return dialog
         return dialog.showAndWait();
     }
 
+    //Functions (validate): 
     private static boolean validate(TextField id, TextField name, TextField age,
                                     ComboBox<String> sex, ComboBox<String> admin,
                                     Label errorLabel, Node addBtn) {
@@ -115,3 +129,4 @@ public class PatientFormDialog {
     }
     private static void clearError(TextField tf) { tf.setStyle(null); }
 }
+
