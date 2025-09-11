@@ -75,6 +75,7 @@ public class LabFormDialog {
         return dialog.showAndWait();
     }
 
+    //Functions (validate): 
     private static boolean validate(TextField lab, TextField cost, Label errorLabel, Node addBtn) {
         lab.setStyle(null); cost.setStyle(null);
         String err = null;
@@ -93,4 +94,5 @@ public class LabFormDialog {
         return err == null;
     }
 }
+
 
