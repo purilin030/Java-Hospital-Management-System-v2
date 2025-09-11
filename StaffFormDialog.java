@@ -10,30 +10,40 @@ import java.util.Optional;
 public class StaffFormDialog {
 
     public static Optional<Staff> show() {
+
+        // <Staff> means return the staff type 
         Dialog<Staff> dialog = new Dialog<Staff>();
         dialog.setTitle("Add New Staff");
         dialog.setHeaderText("Fill in the details");
 
+        //Add the "Add " button and confirm the function "ButtonBar.ButtonData.OK_DONE" 
         ButtonType okType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        //addAll to "Add" button that had created before and JavaFx's cancel button
         dialog.getDialogPane().getButtonTypes().addAll(okType, ButtonType.CANCEL);
 
+        //Add textfield to prompt user to enter data
+        
         final TextField id = new TextField();
         final TextField name = new TextField();
         final TextField designation = new TextField();
         final TextField sex = new TextField();
         final TextField salary = new TextField();
 
+        //Add hint text
         id.setPromptText("e.g., S2001");
         name.setPromptText("Name");
         designation.setPromptText("Designation");
         sex.setPromptText("M/F");
         salary.setPromptText("e.g., 3500");
 
+        // Create a new label, display the error text when user prompt wrong data
         final Label errorLabel = new Label();
         errorLabel.setStyle("-fx-text-fill: #d00000; -fx-font-size: 12px;");
 
         GridPane gp = new GridPane();
         gp.setHgap(10); gp.setVgap(10); gp.setPadding(new Insets(10));
+
+        //Using addRow to combine the Label and TextField
         gp.addRow(0, new Label("ID:"), id);
         gp.addRow(1, new Label("Name:"), name);
         gp.addRow(2, new Label("Designation:"), designation);
@@ -41,9 +51,11 @@ public class StaffFormDialog {
         gp.addRow(4, new Label("Salary:"), salary);
         gp.add(errorLabel, 0, 5, 2, 1);
 
+        //Make okType to Node addBtn element and disable addButton disable first
         Node addBtn = dialog.getDialogPane().lookupButton(okType);
         addBtn.setDisable(true);
 
+        // Validation (using validate function )
         id.textProperty().addListener((o, ov, nv) -> validate(id, name, salary, errorLabel, addBtn));
         name.textProperty().addListener((o, ov, nv) -> validate(id, name, salary, errorLabel, addBtn));
         salary.textProperty().addListener((o, ov, nv) -> validate(id, name, salary, errorLabel, addBtn));
@@ -52,6 +64,7 @@ public class StaffFormDialog {
 
         dialog.setResultConverter(btn -> {
             if (btn == okType) {
+                //Last validate check 
                 if (!validate(id, name, salary, errorLabel, addBtn)) return null;
                 int sal;
                 try {
@@ -64,6 +77,7 @@ public class StaffFormDialog {
                     new Alert(Alert.AlertType.ERROR, "Salary must be a number", ButtonType.OK).showAndWait();
                     return null;
                 }
+                //return data 
                 return new Staff(
                         id.getText().trim(),
                         name.getText().trim(),
@@ -74,10 +88,12 @@ public class StaffFormDialog {
             }
             return null;
         });
-
+        
+        //return dialog
         return dialog.showAndWait();
     }
 
+    //Functions (validate): 
     private static boolean validate(TextField id, TextField name, TextField salary,
                                     Label errorLabel, Node addBtn) {
         clearError(id); clearError(name); clearError(salary);
@@ -103,3 +119,4 @@ public class StaffFormDialog {
     }
     private static void clearError(TextField tf) { tf.setStyle(null); }
 }
+
