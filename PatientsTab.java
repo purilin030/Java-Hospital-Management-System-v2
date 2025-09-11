@@ -32,8 +32,9 @@ public class PatientsTab {
     }
 
     public Tab build() {
+    	//table and columns
         TableView<Patient> table = new TableView<>(items);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);//Use CONSTRAINED to automatically distribute the remaining width evenly among columns
 
         TableColumn<Patient, String> cId   = new TableColumn<>("ID");
         TableColumn<Patient, String> cName = new TableColumn<>("Name");
@@ -51,31 +52,42 @@ public class PatientsTab {
 
         table.getColumns().addAll(cId, cName, cDis, cSex, cAdm, cAge);
 
+        //search box
         TextField searchField = new TextField();
         searchField.setPromptText("Search by Patient ID...");
+        //buttons
         Button searchBtn  = new Button("Search");
         Button addBtn     = new Button("Add");
         Button deleteBtn  = new Button("Delete");
         Button refreshBtn = new Button("Refresh");
 
+        //header of tab
         HBox actions = new HBox(8, searchField, searchBtn, addBtn, deleteBtn, refreshBtn);
         actions.setAlignment(Pos.CENTER_LEFT);
         actions.setPadding(new Insets(8, 0, 8, 0));
-
+        
+        //searching
         searchBtn.setOnAction(e -> {
             String id = searchField.getText() == null ? "" : searchField.getText().trim();
+          //if search box is empty, if will pop up a message
             if (id.isEmpty()) { info.accept("Enter Patient ID."); return; }
+          //if no found the id
             Patient match = null;
             for (Patient p : items) if (p != null && p.getId().equalsIgnoreCase(id)) { match = p; break; }
             if (match == null) info.accept("Not found.");
-            else { table.getSelectionModel().select(match); table.scrollTo(match); }
+            else { table.getSelectionModel().select(match); table.scrollTo(match); }//highlight the row you want to find
         });
+        
+        searchField.setOnAction(e -> searchBtn.fire());//support press enter to search
 
+        //adding
         addBtn.setOnAction(e -> {
             Optional<Patient> maybe = PatientFormDialog.show();
             if (maybe.isPresent()) {
                 Patient p = maybe.get();
+                //if the number of patient is out of the array length which is declared in initialization 
                 if (init.patCount >= init.patients.length) { error.accept("Patient list full."); return; }
+              //validation for adding duplicate id
                 for (int i = 0; i < init.patCount; i++) {
                     if (init.patients[i].getId().equalsIgnoreCase(p.getId())) { error.accept("Duplicate ID."); return; }
                 }
@@ -85,9 +97,11 @@ public class PatientsTab {
             }
         });
 
+        //deleting
         deleteBtn.setOnAction(e -> {
             Patient sel = table.getSelectionModel().getSelectedItem();
-            if (sel == null) { info.accept("Select a row."); return; }
+            
+          //confirmation for delete
             Alert c = new Alert(Alert.AlertType.CONFIRMATION,
                     "Delete patient [" + sel.getId() + " - " + sel.getName() + "] ?",
                     ButtonType.OK, ButtonType.CANCEL);
@@ -99,8 +113,14 @@ public class PatientsTab {
                 }
             });
         });
+        
+      //if user no select any row, delete button cannot use
+        deleteBtn.disableProperty().bind(
+        	    table.getSelectionModel().selectedItemProperty().isNull()
+        );
 
-        refreshBtn.setOnAction(e -> refreshFromArray.run());
+      //refreshing
+        refreshBtn.setOnAction(e -> refreshFromArray.run());//ensure UI consistency with the actual source
 
         VBox content = new VBox(actions, table);
         content.setSpacing(6);
