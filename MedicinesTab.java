@@ -32,8 +32,9 @@ public class MedicinesTab {
     }
 
     public Tab build() {
+    	//table and columns
         TableView<Medicine> table = new TableView<>(items);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);//Use CONSTRAINED to automatically distribute the remaining width evenly among columns
 
         TableColumn<Medicine, String> cName  = new TableColumn<>("Name");
         TableColumn<Medicine, String> cManu  = new TableColumn<>("Manufacturer");
@@ -49,31 +50,42 @@ public class MedicinesTab {
 
         table.getColumns().addAll(cName, cManu, cExp, cCost, cCount);
 
+        //search box
         TextField searchField = new TextField();
         searchField.setPromptText("Search by Medicine Name...");
+        //buttons
         Button searchBtn  = new Button("Search");
         Button addBtn     = new Button("Add");
         Button deleteBtn  = new Button("Delete");
         Button refreshBtn = new Button("Refresh");
-
+        
+        //header of tab
         HBox actions = new HBox(8, searchField, searchBtn, addBtn, deleteBtn, refreshBtn);
         actions.setAlignment(Pos.CENTER_LEFT);
         actions.setPadding(new Insets(8, 0, 8, 0));
 
+        //searching
         searchBtn.setOnAction(e -> {
             String name = searchField.getText() == null ? "" : searchField.getText().trim();
+          //if search box is empty, if will pop up a message
             if (name.isEmpty()) { info.accept("Enter Medicine Name."); return; }
+          //if no found the name
             Medicine match = null;
             for (Medicine m : items) if (m != null && m.getName().equalsIgnoreCase(name)) { match = m; break; }
             if (match == null) info.accept("Not found.");
-            else { table.getSelectionModel().select(match); table.scrollTo(match); }
+            else { table.getSelectionModel().select(match); table.scrollTo(match); }//highlight the row you want to find
         });
-
+        
+        searchField.setOnAction(e -> searchBtn.fire());//support press enter to search
+        
+        //adding
         addBtn.setOnAction(e -> {
             Optional<Medicine> maybe = MedicineFormDialog.show();
             if (maybe.isPresent()) {
                 Medicine m = maybe.get();
+              //if the number of medicine is out of the array length which is declared in initialization
                 if (init.medCount >= init.medicines.length) { error.accept("Medicine list full."); return; }
+              //validation for adding duplicate id
                 for (int i = 0; i < init.medCount; i++) {
                     if (init.medicines[i].getName().equalsIgnoreCase(m.getName())) { error.accept("Duplicate name."); return; }
                 }
@@ -83,9 +95,10 @@ public class MedicinesTab {
             }
         });
 
+        //deleting
         deleteBtn.setOnAction(e -> {
             Medicine sel = table.getSelectionModel().getSelectedItem();
-            if (sel == null) { info.accept("Select a row."); return; }
+          //confirmation for delete
             Alert c = new Alert(Alert.AlertType.CONFIRMATION,
                     "Delete medicine [" + sel.getName() + "] ?",
                     ButtonType.OK, ButtonType.CANCEL);
@@ -97,8 +110,14 @@ public class MedicinesTab {
                 }
             });
         });
+        
+      //if user no select any row, delete button cannot use
+        deleteBtn.disableProperty().bind(
+        	    table.getSelectionModel().selectedItemProperty().isNull()
+        );
 
-        refreshBtn.setOnAction(e -> refreshFromArray.run());
+        //refreshing
+        refreshBtn.setOnAction(e -> refreshFromArray.run());//ensure UI consistency with the actual source
 
         VBox content = new VBox(actions, table);
         content.setSpacing(6);
