@@ -32,8 +32,9 @@ public class StaffTab {
     }
 
     public Tab build() {
+    	//table and columns
         TableView<Staff> table = new TableView<>(items);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);//Use CONSTRAINED to automatically distribute the remaining width evenly among columns
 
         TableColumn<Staff, String> cId   = new TableColumn<>("ID");
         TableColumn<Staff, String> cName = new TableColumn<>("Name");
@@ -48,32 +49,43 @@ public class StaffTab {
         cSal.setCellValueFactory(cell -> new ReadOnlyStringWrapper(String.valueOf(cell.getValue().getSalary())));
 
         table.getColumns().addAll(cId, cName, cDes, cSex, cSal);
-
+        
+        //search box
         TextField searchField = new TextField();
         searchField.setPromptText("Search by Staff ID...");
+        //buttons
         Button searchBtn  = new Button("Search");
         Button addBtn     = new Button("Add");
         Button deleteBtn  = new Button("Delete");
         Button refreshBtn = new Button("Refresh");
 
+        //header of tab
         HBox actions = new HBox(8, searchField, searchBtn, addBtn, deleteBtn, refreshBtn);
         actions.setAlignment(Pos.CENTER_LEFT);
         actions.setPadding(new Insets(8, 0, 8, 0));
 
+        //searching
         searchBtn.setOnAction(e -> {
             String id = searchField.getText() == null ? "" : searchField.getText().trim();
+          //if search box is empty, if will pop up a message
             if (id.isEmpty()) { info.accept("Enter Staff ID."); return; }
+          //if no found the id
             Staff match = null;
             for (Staff s : items) if (s != null && s.getId().equalsIgnoreCase(id)) { match = s; break; }
             if (match == null) info.accept("Not found.");
-            else { table.getSelectionModel().select(match); table.scrollTo(match); }
+            else { table.getSelectionModel().select(match); table.scrollTo(match); }//highlight the row you want to find
         });
-
+        
+        searchField.setOnAction(e -> searchBtn.fire());//support press enter to search
+        
+      //adding
         addBtn.setOnAction(e -> {
             Optional<Staff> maybe = StaffFormDialog.show();
             if (maybe.isPresent()) {
                 Staff s = maybe.get();
+              //if the number of patient is out of the array length which is declared in initialization
                 if (init.staffCount >= init.staff.length) { error.accept("Staff list full."); return; }
+              //validation for adding duplicate id
                 for (int i = 0; i < init.staffCount; i++) {
                     if (init.staff[i].getId().equalsIgnoreCase(s.getId())) { error.accept("Duplicate ID."); return; }
                 }
@@ -82,10 +94,12 @@ public class StaffTab {
                 info.accept("Added.");
             }
         });
-
+        
+        //deleting
         deleteBtn.setOnAction(e -> {
             Staff sel = table.getSelectionModel().getSelectedItem();
-            if (sel == null) { info.accept("Select a row."); return; }
+            
+          //confirmation for delete
             Alert c = new Alert(Alert.AlertType.CONFIRMATION,
                     "Delete staff [" + sel.getId() + " - " + sel.getName() + "] ?",
                     ButtonType.OK, ButtonType.CANCEL);
@@ -97,8 +111,14 @@ public class StaffTab {
                 }
             });
         });
-
-        refreshBtn.setOnAction(e -> refreshFromArray.run());
+        
+      //if user no select any row, delete button cannot use
+        deleteBtn.disableProperty().bind(
+        	    table.getSelectionModel().selectedItemProperty().isNull()
+        );
+        
+        //refreshing
+        refreshBtn.setOnAction(e -> refreshFromArray.run());//ensure UI consistency with the actual source
 
         VBox content = new VBox(actions, table);
         content.setSpacing(6);
