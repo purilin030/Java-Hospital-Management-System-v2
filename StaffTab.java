@@ -83,7 +83,7 @@ public class StaffTab {
             Optional<Staff> maybe = StaffFormDialog.show();
             if (maybe.isPresent()) {
                 Staff s = maybe.get();
-              //if the number of patient is out of the array length which is declared in initialization
+              //if the number of staff is out of the array length which is declared in initialization
                 if (init.staffCount >= init.staff.length) { error.accept("Staff list full."); return; }
               //validation for adding duplicate id
                 for (int i = 0; i < init.staffCount; i++) {
@@ -128,3 +128,4 @@ public class StaffTab {
         return tab;
     }
 }
+
