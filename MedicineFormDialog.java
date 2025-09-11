@@ -94,7 +94,8 @@ public class MedicineFormDialog {
         //return dialog
         return dialog.showAndWait();
     }
-
+    
+    //Functions (validate): 
     private static boolean validate(TextField name, TextField expiry, TextField cost, TextField count,
                                     Label errorLabel, Node addBtn) {
         clear(name, expiry, cost, count);
@@ -132,4 +133,5 @@ public class MedicineFormDialog {
     private static void clear(TextField... tfs) { for (TextField tf : tfs) tf.setStyle(null); }
     private static void mark(TextField tf) { tf.setStyle("-fx-border-color: #d00000; -fx-border-width: 1.2;"); }
 }
+
 
