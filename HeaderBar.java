@@ -51,12 +51,12 @@ public class HeaderBar extends HBox {
 
         // Time line updates UI on FX thread safely
         timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, e -> nowLabel.setText(LocalDateTime.now().format(FMT))),
-                new KeyFrame(Duration.seconds(1))
+                new KeyFrame(Duration.ZERO, e -> nowLabel.setText(LocalDateTime.now().format(FMT))),//update time immediately upon startup
+                new KeyFrame(Duration.seconds(1))//execute every second
         );
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount(Timeline.INDEFINITE);//infinite loop
     }
 
-    public void startClock() { timeline.play(); }
-    public void stopClock()  { timeline.stop(); }
+    public void startClock() { timeline.play(); }//starting renew time
+    public void stopClock()  { timeline.stop(); }//ending renew time
 }
