@@ -32,8 +32,9 @@ public class LabsTab {
     }
 
     public Tab build() {
+    	//table and columns
         TableView<Lab> table = new TableView<>(items);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);//Use CONSTRAINED to automatically distribute the remaining width evenly among columns
 
         TableColumn<Lab, String> cLab  = new TableColumn<>("Lab");
         TableColumn<Lab, String> cCost = new TableColumn<>("Cost");
@@ -43,31 +44,42 @@ public class LabsTab {
 
         table.getColumns().addAll(cLab, cCost);
 
+        //search box
         TextField searchField = new TextField();
         searchField.setPromptText("Search by Lab Name...");
+        //buttons
         Button searchBtn  = new Button("Search");
         Button addBtn     = new Button("Add");
         Button deleteBtn  = new Button("Delete");
         Button refreshBtn = new Button("Refresh");
 
+        //header of tab
         HBox actions = new HBox(8, searchField, searchBtn, addBtn, deleteBtn, refreshBtn);
         actions.setAlignment(Pos.CENTER_LEFT);
         actions.setPadding(new Insets(8, 0, 8, 0));
 
+        //searching
         searchBtn.setOnAction(e -> {
             String name = searchField.getText() == null ? "" : searchField.getText().trim();
+          //if search box is empty, if will pop up a message
             if (name.isEmpty()) { info.accept("Enter Lab Name."); return; }
+          //if no found the name
             Lab match = null;
             for (Lab l : items) if (l != null && l.getLab().equalsIgnoreCase(name)) { match = l; break; }
             if (match == null) info.accept("Not found.");
-            else { table.getSelectionModel().select(match); table.scrollTo(match); }
+            else { table.getSelectionModel().select(match); table.scrollTo(match); }//highlight the row you want to find
         });
-
+        
+        searchField.setOnAction(e -> searchBtn.fire());//support press enter to search
+        
+        //adding
         addBtn.setOnAction(e -> {
             Optional<Lab> maybe = LabFormDialog.show();
             if (maybe.isPresent()) {
                 Lab l = maybe.get();
+              //if the number of lab is out of the array length which is declared in initialization
                 if (init.labCount >= init.labs.length) { error.accept("Lab list full."); return; }
+              //validation for adding duplicate name
                 for (int i = 0; i < init.labCount; i++) {
                     if (init.labs[i].getLab().equalsIgnoreCase(l.getLab())) { error.accept("Duplicate name."); return; }
                 }
@@ -76,10 +88,11 @@ public class LabsTab {
                 info.accept("Added.");
             }
         });
-
+        
+        //deleting
         deleteBtn.setOnAction(e -> {
             Lab sel = table.getSelectionModel().getSelectedItem();
-            if (sel == null) { info.accept("Select a row."); return; }
+          //confirmation for delete
             Alert c = new Alert(Alert.AlertType.CONFIRMATION,
                     "Delete lab [" + sel.getLab() + "] ?",
                     ButtonType.OK, ButtonType.CANCEL);
@@ -91,8 +104,14 @@ public class LabsTab {
                 }
             });
         });
+        
+      //if user no select any row, delete button cannot use
+        deleteBtn.disableProperty().bind(
+        	    table.getSelectionModel().selectedItemProperty().isNull()
+        );
 
-        refreshBtn.setOnAction(e -> refreshFromArray.run());
+        //refreshing
+        refreshBtn.setOnAction(e -> refreshFromArray.run());//ensure UI consistency with the actual source
 
         VBox content = new VBox(actions, table);
         content.setSpacing(6);
