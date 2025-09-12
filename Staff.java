@@ -1,5 +1,3 @@
-package Ass1;
-
 public class Staff extends Person{
 	
 	private String designation;
@@ -53,4 +51,5 @@ public class Staff extends Person{
 	}
 	
 }
+
 
