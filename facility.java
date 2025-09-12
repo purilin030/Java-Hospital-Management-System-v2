@@ -1,6 +1,3 @@
-package Ass1;
-
-
 public class facility {
 	
 	private String facility;
@@ -29,3 +26,4 @@ public class facility {
 	}
 
 }
+
