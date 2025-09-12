@@ -1,5 +1,3 @@
-package Ass1;
-
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -133,5 +131,6 @@ public class MedicineFormDialog {
     private static void clear(TextField... tfs) { for (TextField tf : tfs) tf.setStyle(null); }
     private static void mark(TextField tf) { tf.setStyle("-fx-border-color: #d00000; -fx-border-width: 1.2;"); }
 }
+
 
 
