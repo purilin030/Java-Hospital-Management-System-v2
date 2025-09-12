@@ -1,5 +1,3 @@
-package Ass1;
-
 public class Doctor extends Person{
 	
 	private String specialist, worktime, qualification;
@@ -62,3 +60,4 @@ public class Doctor extends Person{
 	}
 
 }
+
