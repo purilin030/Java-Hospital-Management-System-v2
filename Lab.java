@@ -1,6 +1,3 @@
-package Ass1;
-
-
 public class Lab {
 	
 	private String lab;
@@ -40,3 +37,4 @@ public class Lab {
 	}
 	
 }
+
