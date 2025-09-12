@@ -1,5 +1,3 @@
-package Ass1;
-
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -128,4 +126,5 @@ public class StaffTab {
         return tab;
     }
 }
+
 
