@@ -32,6 +32,14 @@ public class Staff extends Person{
 	public void setSalary(int salary) {
 		this.salary = salary;
 	}
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
 	
 	public void showStaffInfo() {
 		System.out.println("--- Staff Information ---");
@@ -45,3 +53,4 @@ public class Staff extends Person{
 	}
 	
 }
+
