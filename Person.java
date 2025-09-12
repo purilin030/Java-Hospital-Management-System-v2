@@ -1,5 +1,3 @@
-package Ass1;
-
 public class Person {
     protected String id;
     protected String name;
@@ -30,4 +28,5 @@ public class Person {
     }
 
 }
+
 
