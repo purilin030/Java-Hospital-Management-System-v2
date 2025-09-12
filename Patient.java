@@ -1,5 +1,3 @@
-package Ass1;
-
 public class Patient extends Person{
 	private String disease, sex, adminStatus;
 	private int age;
@@ -61,3 +59,4 @@ public class Patient extends Person{
 	}
 
 }
+
