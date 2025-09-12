@@ -1,5 +1,3 @@
-package Ass1;
-
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -129,4 +127,5 @@ public class PatientFormDialog {
     }
     private static void clearError(TextField tf) { tf.setStyle(null); }
 }
+
 
