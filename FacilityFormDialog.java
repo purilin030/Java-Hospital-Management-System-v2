@@ -1,5 +1,3 @@
-package Ass1;
-
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -74,5 +72,6 @@ public class FacilityFormDialog {
         return err == null;
     }
 }
+
 
 
