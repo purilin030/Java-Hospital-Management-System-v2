@@ -1,8 +1,8 @@
 package Ass1;
 
 public class Person {
-    protected String id;
-    protected String name;
+    private String id;
+    private String name;
 
     public Person(String id, String name) {
         this.id = id;
@@ -28,4 +28,5 @@ public class Person {
     public void setName(String name) {
         this.name = name;
     }
+
 }
