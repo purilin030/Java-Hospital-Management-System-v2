@@ -1,5 +1,3 @@
-package Ass1;
-
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -94,5 +92,6 @@ public class LabFormDialog {
         return err == null;
     }
 }
+
 
 
