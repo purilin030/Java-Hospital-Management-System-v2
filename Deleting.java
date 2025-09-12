@@ -1,5 +1,3 @@
-package Ass1;
-
 public class Deleting {
 
     public static boolean deleteDoctorById(Doctor[] doctors, int[] count, String id) {
@@ -71,3 +69,4 @@ public class Deleting {
         count[0]--;
     }
 }
+
