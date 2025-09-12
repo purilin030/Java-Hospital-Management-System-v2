@@ -1,5 +1,3 @@
-package Ass1;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
