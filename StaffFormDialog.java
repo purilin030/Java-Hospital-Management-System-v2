@@ -1,5 +1,3 @@
-package Ass1;
-
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -119,4 +117,5 @@ public class StaffFormDialog {
     }
     private static void clearError(TextField tf) { tf.setStyle(null); }
 }
+
 
