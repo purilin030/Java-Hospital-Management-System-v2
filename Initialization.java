@@ -1,5 +1,3 @@
-package Ass1;
-
 public class Initialization {
     public Doctor[] doctors = new Doctor[25];
     public Patient[] patients = new Patient[100];
@@ -42,4 +40,5 @@ public class Initialization {
         facilities[2] = new facility("Operation Theater");
     }
 }
+
 
