@@ -1,6 +1,3 @@
-package Ass1;
-
-
 public class Medicine {
 	
 	private String name, manufacturer, expiryDate;
@@ -70,3 +67,4 @@ public class Medicine {
 	}
 	
 }
+
