@@ -54,7 +54,7 @@ public class HmsFxApp extends Application {
         root.setPadding(new Insets(16));
 
         Scene scene = new Scene(root, 1200, 700);
-        stage.setTitle("Hospital Management System (JavaFX)");
+        stage.setTitle("Hospital Management System");
         stage.setScene(scene);
         stage.show();
 
@@ -102,4 +102,5 @@ public class HmsFxApp extends Application {
 
     public static void main(String[] args) { launch(args); }
 }
+
 
